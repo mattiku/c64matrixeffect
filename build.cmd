@@ -1,0 +1,1 @@
+cl65 -t c64 -Oir --codesize 500 -Cl -o build\demo.prg src\main.c src\streameffect.c src\backgroundimage.c
