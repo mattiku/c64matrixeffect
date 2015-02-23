@@ -27,6 +27,6 @@ void reset_screen_state(void) {
     bordercolor(COLOR_LIGHTBLUE);
     textcolor(COLOR_LIGHTBLUE);
     clrscr();
-    gotoxy(0,0);
+    gotoxy(0, 0);
     cursor(1);
 }

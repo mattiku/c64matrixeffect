@@ -62,7 +62,7 @@ char search_free_column() {
     char try_counter = 0;
 
     while (!column_found) {
-        column = get_pseudo_random_byte(0, SCREEN_WIDTH-1);
+        column = get_pseudo_random_byte(0, SCREEN_WIDTH - 1);
         if (column_user_counts[column] == 0) {
             column_found = 1;
         } else {
@@ -86,7 +86,7 @@ void reset_stream(struct stream *stream) {
     stream->column = next_column; 
     stream->row = 0;
     stream->delay = get_pseudo_random_byte(STREAM_DELAY_MIN, STREAM_DELAY_MAX);
-    stream->wait_counter = stream->delay; //get_pseudo_random_byte(0, stream->delay);
+    stream->wait_counter = stream->delay;
     stream->length = stream->delay + get_pseudo_random_byte(STREAM_LENGTH_MIN, STREAM_LENGTH_MAX);
     if (stream->length > STREAM_LENGTH_MAX) {
         stream->length = STREAM_LENGTH_MAX;
@@ -144,7 +144,7 @@ void update_stream(struct stream *stream) {
     }
 
     if (body_painter >= 0 && body_painter < SCREEN_HEIGHT) {
-        set_color(column, body_painter, COLOR_LIGHTGREEN); // stream->tail_color
+        set_color(column, body_painter, COLOR_LIGHTGREEN);
     }
 
     if (tail_painter >= 0 && tail_painter < SCREEN_HEIGHT) {
@@ -153,7 +153,7 @@ void update_stream(struct stream *stream) {
 
     if (tail_eraser >= 0 && tail_eraser < SCREEN_HEIGHT) {
         if (is_background_pixel_on(column, tail_eraser)) {
-            set_color(column, tail_eraser, get_pseudo_random_byte(0,1) != 0 ? COLOR_BLUE : COLOR_LIGHTBLUE);
+            set_color(column, tail_eraser, get_pseudo_random_byte(0, 1) != 0 ? COLOR_BLUE : COLOR_LIGHTBLUE);
             write_char(column, tail_eraser, 46);
         } else {
             clear_char(column, tail_eraser);
