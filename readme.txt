@@ -9,10 +9,10 @@ Project:
   - written with C-language using cc65 compiler
   - effect properties can be set in a header file
   - a python script for creating background images
-  
-Features: 
-  - streams flows from top to bottom 
-  - streams writes random characters to screen  
+
+Features:
+  - streams flows from top to bottom
+  - streams writes random characters to screen
   - streams have random speeds
   - streams have random lengths
   - streams have random columns
@@ -20,7 +20,8 @@ Features:
   - streams uses 4 colours each to simulate fade effect
   - background image is revealed column by column, after a stream have run over it
   - background image pixel colours are changed by random every time a stream runs over it
-  
+  - FPS counter can be enabled and disabled by pressing space bar
+
 Build dependencies:
   - cc65 build environment
   - python module: PIL, if you want to generate a different background image

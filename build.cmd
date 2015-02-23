@@ -1,1 +1,1 @@
-cl65 -t c64 -Oir --codesize 500 -Cl -o build\demo.prg src\main.c src\streameffect.c src\backgroundimage.c src\textscreen.c
+cl65 -t c64 -Oir --codesize 500 -Cl -o build\demo.prg src\main.c src\streameffect.c src\backgroundimage.c src\textscreen.c src\fps.c
