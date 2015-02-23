@@ -137,10 +137,7 @@ void update_stream(struct stream *stream) {
     }
 
     if (head_painter >= 0 && head_painter < SCREEN_HEIGHT) {
-        if (stream->delay == 0)
-            set_color(column, head_painter, COLOR_WHITE);
-        else
-            set_color(column, head_painter, COLOR_CYAN);
+        set_color(column, head_painter, COLOR_CYAN);
     }
 
     if (body_painter >= 0 && body_painter < SCREEN_HEIGHT) {
