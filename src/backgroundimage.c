@@ -4,7 +4,8 @@
 
 #include "backgroundimage.h"
 
-#define SCREEN_HEIGHT 25
+#define BACKGROUND_IMAGE_WIDTH 40
+#define BACKGROUND_IMAGE_HEIGHT 25
 
 static char background_image[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -34,13 +35,13 @@ static char background_image[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-const char bitmasks[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+static const char bitmasks[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
 
 char is_background_pixel_on(char x, char y) {
     char bitmask;
     char image_byte_x;
 
-    if (y < SCREEN_HEIGHT) {
+    if (x < BACKGROUND_IMAGE_WIDTH && y < BACKGROUND_IMAGE_HEIGHT) {
         image_byte_x = x / 8;
         bitmask = bitmasks[7 - (x % 8)];
         return background_image[image_byte_x + y * 8] & bitmask;

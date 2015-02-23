@@ -17,15 +17,17 @@ struct stream {
     char row;
     char delay;
     char length;
-    char wait_counter;
+    signed char wait_counter;
+    char placeholder[3]; //  8 byte element size can be looped faster in arrays
 };
 
-char column_user_counts[SCREEN_HEIGHT];
+static char column_user_counts[SCREEN_HEIGHT];
 
 static struct stream streams[STREAM_COUNT];
 
 void reset_stream(struct stream *stream);
-void update_stream(struct stream *dataStream);
+void update_stream(struct stream *stream);
+void update_stream_graphics(struct stream *stream);
 
 void stream_effect_init(void) {
     char x;
@@ -40,15 +42,17 @@ void stream_effect_init(void) {
     }
 
     for (x = 0; x < STREAM_COUNT; ++x) {
-        streams[x].column = -1;
+        streams[x].column = 0;
         reset_stream(&streams[x]);
     }
 }
 
 void stream_effect_update(void) {
-    int x;
+    static int x;
+    struct stream* ptr = streams;
     for (x = 0; x < STREAM_COUNT; ++x) {
-        update_stream(&streams[x]);
+        update_stream(ptr);
+        ptr++;
     }
 }
 
@@ -79,7 +83,7 @@ void reset_stream(struct stream *stream) {
     char next_column;
     
     if (column_user_counts[stream->column] > 0)
-        column_user_counts[stream->column]--;
+        --column_user_counts[stream->column];
     next_column = search_free_column();
     column_user_counts[next_column]++;
     
@@ -94,34 +98,32 @@ void reset_stream(struct stream *stream) {
 }
 
 void update_stream(struct stream *stream) {
-    signed char head_painter;
-    signed char body_painter;
-    signed char tail_painter;
-    signed char tail_eraser;
-    register char column = stream->column;
-    register char row = stream->row;
-
     if (stream->wait_counter > 0) {
-        stream->wait_counter--;
+        --stream->wait_counter;
         return;
     }
     stream->wait_counter = stream->delay;
-
     ++stream->row;
-    row = stream->row;
-    tail_eraser = row - stream->length;
-    head_painter = row - 1;
-    body_painter = head_painter - HEAD_LENGTH;
-    tail_painter = body_painter - BODY_LENGTH;
+    update_stream_graphics(stream);
+}
+
+void update_stream_graphics(struct stream *stream) {
+    signed char row = stream->row;
+    signed char head_painter = row - 1;
+    signed char body_painter = head_painter - HEAD_LENGTH;
+    signed char tail_painter = body_painter - BODY_LENGTH;
+    signed char tail_eraser = row - stream->length;
 
     if (tail_eraser >= SCREEN_HEIGHT) {
         reset_stream(stream);
         return;
     }
 
+    set_column(stream->column);
+
     if (row < SCREEN_HEIGHT) {
-        set_color(column, row, COLOR_WHITE);
-        write_char(column, row, get_pseudo_random_byte(CHARSET_START, CHARSET_END));
+        set_column_color(row, COLOR_WHITE);
+        write_column_char(row, get_pseudo_random_byte(CHARSET_START, CHARSET_END));        
     }
 
     if (head_painter <= tail_eraser) {
@@ -137,23 +139,23 @@ void update_stream(struct stream *stream) {
     }
 
     if (head_painter >= 0 && head_painter < SCREEN_HEIGHT) {
-        set_color(column, head_painter, COLOR_CYAN);
+        set_column_color(head_painter, COLOR_CYAN);
     }
 
     if (body_painter >= 0 && body_painter < SCREEN_HEIGHT) {
-        set_color(column, body_painter, COLOR_LIGHTGREEN);
+        set_column_color(body_painter, COLOR_LIGHTGREEN);
     }
 
     if (tail_painter >= 0 && tail_painter < SCREEN_HEIGHT) {
-        set_color(column, tail_painter, COLOR_GREEN);
+        set_column_color(tail_painter, COLOR_GREEN);
     }
 
     if (tail_eraser >= 0 && tail_eraser < SCREEN_HEIGHT) {
-        if (is_background_pixel_on(column, tail_eraser)) {
-            set_color(column, tail_eraser, get_pseudo_random_byte(0, 1) != 0 ? COLOR_BLUE : COLOR_LIGHTBLUE);
-            write_char(column, tail_eraser, 46);
+        if (is_background_pixel_on(stream->column, tail_eraser)) {
+            set_column_color(tail_eraser, get_pseudo_random_byte(0, 1) != 0 ? COLOR_BLUE : COLOR_LIGHTBLUE);
+            write_column_char(tail_eraser, 46);
         } else {
-            clear_char(column, tail_eraser);
+            clear_column_char(tail_eraser);
         }
     }
 }
