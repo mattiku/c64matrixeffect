@@ -21,7 +21,7 @@ struct stream {
     char placeholder[3]; //  8 byte element size can be looped faster in arrays
 };
 
-static char column_user_counts[SCREEN_HEIGHT];
+static char column_user_counts[SCREEN_WIDTH];
 
 static struct stream streams[STREAM_COUNT];
 
